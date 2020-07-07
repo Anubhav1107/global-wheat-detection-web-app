@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import cv2
 import re
 from PIL import Image
 import albumentations as A
@@ -11,7 +10,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import streamlit as st
 from torch.utils.data import DataLoader, Dataset
 from matplotlib import pyplot as plt
-
+import cv2
 
 def expand_bbox(x):
     r = np.array(re.findall("([0-9]+[.]?[0-9]*)", x))
