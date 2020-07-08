@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:latest
+FROM pytorch/pytorch:1.4-cuda10.1-cudnn7-runtime
 RUN pip install virtualenv
 ENV VIRTUAL_ENV=/venv
 RUN virtualenv venv -p python3
