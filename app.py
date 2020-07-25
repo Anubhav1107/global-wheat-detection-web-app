@@ -12,12 +12,6 @@ from torch.utils.data import DataLoader, Dataset
 from matplotlib import pyplot as plt
 import cv2
 
-def expand_bbox(x):
-    r = np.array(re.findall("([0-9]+[.]?[0-9]*)", x))
-    if len(r) == 0:
-        r = [-1, -1, -1, -1]
-    return r
-
 
 class WheatTestDataset(Dataset):
 
@@ -61,7 +55,10 @@ if __name__ == "__main__":
     st.header("""
     WELCOME TO GLOBAL WHEAT HEAD CHALLENGE!
     """)
-
+    st.subheader('Please open this website with Google Chrome.')
+    uploaded_file = st.file_uploader("Choose an image... (jpg only)", type="jpg")
+    confidence_threshold = st.number_input('Please specify the confidence of a wheat head')
+    button = st.button('Confirm')
     WEIGHTS_FILE = 'fasterrcnn_resnet50_fpn_best.pth'
     # load a model; pre-trained on COCO
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=False, pretrained_backbone=False)
@@ -74,14 +71,13 @@ if __name__ == "__main__":
     # Load the trained weights
     model.load_state_dict(torch.load(WEIGHTS_FILE, map_location=device))
     model.eval()
-    x = model.to(device)
-    detection_threshold = 0.6
+
+    detection_threshold = confidence_threshold or 0.5
     results = []
     outputs = None
     images = None
 
-    uploaded_file = st.file_uploader("Choose an image... (jpg only)", type="jpg")
-    if uploaded_file is not None:
+    if button and uploaded_file is not None:
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Image', use_column_width=True)
         st.write("")
@@ -130,9 +126,9 @@ if __name__ == "__main__":
         for box in boxes:
             x1, y1, x2, y2 = box
             sample = cv2.rectangle(img=sample,
-                          pt1=(x1, y1),
-                          pt2=(x2, y2),
-                          color=(0, 0, 255), thickness=3)
+                                   pt1=(x1, y1),
+                                   pt2=(x2, y2),
+                                   color=(0, 0, 255), thickness=3)
         ax.set_axis_off()
         st.image(cv2.UMat.get(sample), clamp=True)
         st.write("# Results")
