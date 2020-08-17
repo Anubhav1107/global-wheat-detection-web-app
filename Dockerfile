@@ -11,10 +11,10 @@ ADD . /app
 # Install dependencies
 RUN apt update
 RUN pip install -r requirements.txt
-RUN git lfs pull --include "*.pth"
 
 # copying all files over
 COPY . /app
+RUN git lfs pull --include "*.pth"
 
 # Expose port 
 ENV PORT 8501
