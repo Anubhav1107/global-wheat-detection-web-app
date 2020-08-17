@@ -1,5 +1,7 @@
 FROM pytorch/pytorch:1.4-cuda10.1-cudnn7-runtime
 RUN pip install virtualenv
+# only needed when using OpenShift
+RUN apt-get install libxrender1
 ENV VIRTUAL_ENV=/venv
 RUN virtualenv venv -p python3
 ENV PATH="VIRTUAL_ENV/bin:$PATH"
